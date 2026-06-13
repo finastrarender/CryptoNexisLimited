@@ -1,11 +1,15 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
+import { normalizeSiteUrl } from "@/lib/site-url";
 
 export const env = createEnv({
   server: {
     MONGODB_URI: z.string().min(1),
     AUTH_SECRET: z.string().min(1),
-    AUTH_URL: z.string().url().optional(),
+    AUTH_URL: z.preprocess(
+      (val) => (typeof val === "string" && val ? normalizeSiteUrl(val) : val),
+      z.string().url().optional(),
+    ),
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
     PREVIEW_SECRET: z.string().min(1).optional(),
     RESEND_API_KEY: z.string().optional(),
