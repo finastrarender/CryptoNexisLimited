@@ -7,6 +7,7 @@ import {
 import { getSiteGlobalCached } from "@/lib/content/site-global";
 import { normalizeSitePath } from "@/lib/site-path";
 import SiteFooter, { type FooterColumn } from "@/components/layout/SiteFooter";
+import ScrollToTopOnNavigate from "@/components/layout/ScrollToTopOnNavigate";
 import SiteHeader from "@/components/layout/SiteHeader";
 import ApplyNowModal from "@/components/apply/ApplyNowModal";
 
@@ -38,6 +39,7 @@ export default async function MarketingLayout({
   };
   return (
     <div className="owtc-app cx-site">
+      <ScrollToTopOnNavigate />
       <SiteHeader navItems={navItems} brandTitle={headerBrand} />
       <main className="cx-site__main">{children}</main>
       <ApplyNowModal content={applyNowModal} />

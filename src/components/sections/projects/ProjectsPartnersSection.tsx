@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import type { z } from "zod";
 import type { projectsPartnersDataSchema } from "@/schemas/sections";
+import ContactLeadFieldError from "@/components/forms/ContactLeadFieldError";
+import { useContactLeadForm } from "@/hooks/useContactLeadForm";
 
 type ProjectsPartnersContent = z.infer<typeof projectsPartnersDataSchema>;
 
@@ -26,9 +27,6 @@ export default function ProjectsPartnersSection({
 }: {
   content?: ProjectsPartnersContent;
 }) {
-  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "err">("idle");
-  const [feedback, setFeedback] = useState("");
-
   const formTitle = content?.formTitle?.trim() || DEFAULT_TITLE;
   const submitLabel = content?.submitLabel?.trim() || "SEND INQUIRY";
   const mapImage = content?.mapImage?.trim() || DEFAULT_MAP;
@@ -45,47 +43,11 @@ export default function ProjectsPartnersSection({
     message: content?.placeholders?.message?.trim() || "Brief Summary of Project/Inquiry",
   };
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("loading");
-    const form = e.currentTarget;
-    const fd = new FormData(form);
-    const body = {
-      name: String(fd.get("name") ?? ""),
-      email: String(fd.get("email") ?? ""),
-      phone: "",
-      company: "",
-      inquiryType: String(fd.get("subject") ?? ""),
-      message: String(fd.get("message") ?? ""),
-    };
-
-    try {
-      const res = await fetch("/api/v1/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setStatus("err");
-        setFeedback(
-          (json?.error?.message as string) ||
-            content?.errorMessage ||
-            "Something went wrong. Please try again.",
-        );
-        return;
-      }
-      setStatus("ok");
-      setFeedback(
-        content?.successMessage ||
-          "Thank you — our institutional relations team will be in touch shortly.",
-      );
-      form.reset();
-    } catch {
-      setStatus("err");
-      setFeedback(content?.errorMessage || "Network error. Please try again.");
-    }
-  }
+  const { registerField, onSubmit, status, feedback, formState: { errors } } =
+    useContactLeadForm("projects", {
+      successMessage: content?.successMessage,
+      errorMessage: content?.errorMessage,
+    });
 
   return (
     <section className="cx-projects-partners" aria-labelledby="projects-partners-title">
@@ -101,50 +63,85 @@ export default function ProjectsPartnersSection({
             noValidate
             suppressHydrationWarning
           >
-            <label className="cx-projects-partners__field">
+            <label
+              className={`cx-projects-partners__field${errors.name ? " cx-projects-partners__field--invalid" : ""}`}
+            >
               <span className="visually-hidden">{placeholders.name}</span>
               <input
                 suppressHydrationWarning
-                name="name"
                 type="text"
-                required
                 autoComplete="name"
                 className="cx-projects-partners__input"
                 placeholder={placeholders.name}
+                aria-invalid={errors.name ? true : undefined}
+                aria-describedby={errors.name ? "projects-partners-name-error" : undefined}
+                {...registerField("name")}
+              />
+              <ContactLeadFieldError
+                id="projects-partners-name-error"
+                message={errors.name?.message}
+                className="cx-projects-partners__field-error"
               />
             </label>
-            <label className="cx-projects-partners__field">
+
+            <label
+              className={`cx-projects-partners__field${errors.email ? " cx-projects-partners__field--invalid" : ""}`}
+            >
               <span className="visually-hidden">{placeholders.email}</span>
               <input
                 suppressHydrationWarning
-                name="email"
                 type="email"
-                required
                 autoComplete="email"
                 className="cx-projects-partners__input"
                 placeholder={placeholders.email}
+                aria-invalid={errors.email ? true : undefined}
+                aria-describedby={errors.email ? "projects-partners-email-error" : undefined}
+                {...registerField("email")}
+              />
+              <ContactLeadFieldError
+                id="projects-partners-email-error"
+                message={errors.email?.message}
+                className="cx-projects-partners__field-error"
               />
             </label>
-            <label className="cx-projects-partners__field">
+
+            <label
+              className={`cx-projects-partners__field${errors.subject ? " cx-projects-partners__field--invalid" : ""}`}
+            >
               <span className="visually-hidden">{placeholders.subject}</span>
               <input
                 suppressHydrationWarning
-                name="subject"
                 type="text"
-                required
                 className="cx-projects-partners__input"
                 placeholder={placeholders.subject}
+                aria-invalid={errors.subject ? true : undefined}
+                aria-describedby={errors.subject ? "projects-partners-subject-error" : undefined}
+                {...registerField("subject")}
+              />
+              <ContactLeadFieldError
+                id="projects-partners-subject-error"
+                message={errors.subject?.message}
+                className="cx-projects-partners__field-error"
               />
             </label>
-            <label className="cx-projects-partners__field cx-projects-partners__field--area">
+
+            <label
+              className={`cx-projects-partners__field cx-projects-partners__field--area${errors.message ? " cx-projects-partners__field--invalid" : ""}`}
+            >
               <span className="visually-hidden">{placeholders.message}</span>
               <textarea
                 suppressHydrationWarning
-                name="message"
-                required
                 rows={4}
                 className="cx-projects-partners__input cx-projects-partners__textarea"
                 placeholder={placeholders.message}
+                aria-invalid={errors.message ? true : undefined}
+                aria-describedby={errors.message ? "projects-partners-message-error" : undefined}
+                {...registerField("message")}
+              />
+              <ContactLeadFieldError
+                id="projects-partners-message-error"
+                message={errors.message?.message}
+                className="cx-projects-partners__field-error"
               />
             </label>
 

@@ -1,18 +1,9 @@
-import { z } from "zod";
 import { Resend } from "resend";
 import { jsonData, jsonError } from "@/lib/api-response";
+import { contactLeadApiBodySchema } from "@/lib/contact-lead-form";
 import { connectMongo } from "@/lib/mongoose";
 import ContactLead from "@/models/ContactLead";
 import { env } from "@/env";
-
-const bodySchema = z.object({
-  name: z.string().min(1).max(200),
-  email: z.string().email().max(320),
-  phone: z.string().max(120).optional().default(""),
-  company: z.string().max(200).optional().default(""),
-  inquiryType: z.string().max(200).optional().default(""),
-  message: z.string().min(1).max(8000),
-});
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -21,7 +12,7 @@ export async function POST(request: Request) {
   } catch {
     return jsonError("bad_request", "Invalid JSON", 400);
   }
-  const parsed = bodySchema.safeParse(body);
+  const parsed = contactLeadApiBodySchema.safeParse(body);
   if (!parsed.success) {
     return jsonError("validation_error", "Invalid payload", 422, parsed.error.flatten());
   }
@@ -34,6 +25,7 @@ export async function POST(request: Request) {
     company: parsed.data.company,
     inquiryType: parsed.data.inquiryType,
     message: parsed.data.message,
+    source: parsed.data.source,
   });
 
   if (env.RESEND_API_KEY && env.CONTACT_TO_EMAIL) {

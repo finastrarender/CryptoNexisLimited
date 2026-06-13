@@ -2,6 +2,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { connectMongo } from "@/lib/mongoose";
 import Page from "@/models/Page";
+import ContactLead from "@/models/ContactLead";
 import { redirect } from "next/navigation";
 import LogoutButton from "@/components/admin/LogoutButton";
 
@@ -13,6 +14,12 @@ export default async function AdminDashboardPage() {
 
   await connectMongo();
   const pages = await Page.find({}).sort({ slug: 1 }).lean();
+  const [contactInquiries, projectInquiries] = await Promise.all([
+    ContactLead.countDocuments({
+      $or: [{ source: "contact" }, { source: { $exists: false } }],
+    }),
+    ContactLead.countDocuments({ source: "projects" }),
+  ]);
   const hasHome = pages.some((page) => page.slug === "home");
 
   return (
@@ -47,8 +54,8 @@ export default async function AdminDashboardPage() {
             <p className="admin-dashboard__stat-value">Global control</p>
           </article>
           <article className="admin-dashboard__stat">
-            <p className="admin-dashboard__stat-label">Reminder</p>
-            <p className="admin-dashboard__stat-value">Sync after edits</p>
+            <p className="admin-dashboard__stat-label">Inquiries</p>
+            <p className="admin-dashboard__stat-value">{contactInquiries + projectInquiries}</p>
           </article>
         </section>
 
@@ -88,6 +95,12 @@ export default async function AdminDashboardPage() {
             <h2>Quick links</h2>
           </div>
           <div className="admin-dashboard__quick-links">
+            <Link href="/admin/project-inquiries" className="admin-button-secondary">
+              Project inquiries ({projectInquiries})
+            </Link>
+            <Link href="/admin/contact-inquiries" className="admin-button-secondary">
+              Contact inquiries ({contactInquiries})
+            </Link>
             <Link href="/admin/site-global" className="admin-button-secondary">
               Edit site global settings
             </Link>

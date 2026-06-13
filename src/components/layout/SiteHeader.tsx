@@ -3,13 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import SiteNavLink from "@/components/layout/SiteNavLink";
+import { handleNavLinkClick, isNavLinkActive } from "@/lib/nav-link";
 import { normalizeSitePath } from "@/lib/site-path";
 export type NavItem = { label: string; href: string; active?: boolean };
-
-function isActive(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
 
 export default function SiteHeader({
   navItems,
@@ -68,7 +65,13 @@ export default function SiteHeader({
     <header className="site-header site-header--institutional">
       <div className="site-header__shell section-shell">
         <div className="site-header__inner">
-          <Link className="brand" href="/" aria-label="Cryptonexis Limited home">
+          <Link
+            className="brand"
+            href="/"
+            aria-label="Cryptonexis Limited home"
+            scroll
+            onClick={(event) => handleNavLinkClick(event, pathname, "/")}
+          >
             <span className="brand__title">{brandTitle.trim() || "CRYPTONEXIS LIMITED"}</span>
           </Link>
 
@@ -79,20 +82,20 @@ export default function SiteHeader({
               aria-label="Primary"
             >
               {displayNavItems.map((item) => {
-                const active = isActive(pathname, item.href);
+                const active = isNavLinkActive(pathname, item.href);
                 return (
-                  <Link
+                  <SiteNavLink
                     key={item.label}
-                    className={`site-nav__link${active ? " site-nav__link--active" : ""}`}
                     href={item.href}
-                    aria-current={active ? "page" : undefined}
-                    onClick={() => setIsMenuOpen(false)}
+                    className="site-nav__link"
+                    activeClassName="site-nav__link--active"
+                    onNavigate={() => setIsMenuOpen(false)}
                   >
                     {item.label}
                     {active ? (
                       <span className="site-nav__underline" aria-hidden="true" />
                     ) : null}
-                  </Link>
+                  </SiteNavLink>
                 );
               })}
             </nav>

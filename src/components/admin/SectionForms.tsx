@@ -11,6 +11,7 @@ import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import ImageUploadField from "@/components/admin/ImageUploadField";
 import ContactHqIconPicker from "@/components/admin/ContactHqIconPicker";
 import ProjectsIntegrityIconPicker from "@/components/admin/ProjectsIntegrityIconPicker";
+import ServicesLicensingIconPicker from "@/components/admin/ServicesLicensingIconPicker";
 import SectionSaveFooter from "@/components/admin/SectionSaveFooter";
 import IconPicker, { HOME_SERVICE_CARD_ICON_OPTIONS } from "./IconPicker";
 
@@ -5723,12 +5724,12 @@ function toServicesLicensingDefaultValues(data: Record<string, unknown>): Servic
     card1Description: (card1.description as string) ?? "",
     card1LinkLabel: (card1.linkLabel as string) ?? "",
     card1LinkHref: (card1.linkHref as string) ?? "",
-    card1Icon: (card1.icon as string) ?? "",
+    card1Icon: (card1.icon as string) ?? "blocks",
     card2Title: (card2.title as string) ?? "",
     card2Description: (card2.description as string) ?? "",
     card2LinkLabel: (card2.linkLabel as string) ?? "",
     card2LinkHref: (card2.linkHref as string) ?? "",
-    card2Icon: (card2.icon as string) ?? "",
+    card2Icon: (card2.icon as string) ?? "shield-check",
     licenseRows: licenses
       .map((row) =>
         [
@@ -5751,7 +5752,7 @@ export function ServicesLicensingSectionForm({
   saveMessage,
   saveMessageTone,
 }: SectionFormProps) {
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm<ServicesLicensingFormValues>({
+  const { register, handleSubmit, control, formState: { isSubmitting } } = useForm<ServicesLicensingFormValues>({
     defaultValues: useMemo(() => toServicesLicensingDefaultValues(section.data), [section.data]),
   });
 
@@ -5808,7 +5809,17 @@ export function ServicesLicensingSectionForm({
         <label>Description<textarea rows={3} {...register("card1Description")} /></label>
         <label>Link label<input {...register("card1LinkLabel")} /></label>
         <label>Link href<input {...register("card1LinkHref")} /></label>
-        <label>Icon<input {...register("card1Icon")} /></label>
+        <label>
+          Icon
+          <Controller
+            control={control}
+            name="card1Icon"
+            render={({ field }) => (
+              <ServicesLicensingIconPicker value={field.value} onChange={field.onChange} />
+            )}
+          />
+        </label>
+        <FieldHint>Choose the icon shown on the service card (matches the live Services page).</FieldHint>
       </div>
       <div className="admin-section-group">
         <h4>Card 2</h4>
@@ -5816,7 +5827,17 @@ export function ServicesLicensingSectionForm({
         <label>Description<textarea rows={3} {...register("card2Description")} /></label>
         <label>Link label<input {...register("card2LinkLabel")} /></label>
         <label>Link href<input {...register("card2LinkHref")} /></label>
-        <label>Icon<input {...register("card2Icon")} /></label>
+        <label>
+          Icon
+          <Controller
+            control={control}
+            name="card2Icon"
+            render={({ field }) => (
+              <ServicesLicensingIconPicker value={field.value} onChange={field.onChange} />
+            )}
+          />
+        </label>
+        <FieldHint>Choose the icon shown on the service card (matches the live Services page).</FieldHint>
       </div>
       <label>
         License rows (one per line)

@@ -1,6 +1,5 @@
-import Link from "next/link";
 import SimpleIcon from "@/components/sections/SimpleIcon";
-import { normalizeSitePath } from "@/lib/site-path";
+import SiteNavLink from "@/components/layout/SiteNavLink";
 
 type FooterLink = { label: string; href: string };
 type FooterMetaLink = { label: string; href: string; icon?: string };
@@ -52,7 +51,13 @@ export default function SiteFooter({
               <ul className="site-footer__links">
                 {linkColumn.links.map((item) => (
                   <li key={`${item.label}-${item.href}`}>
-                    <Link href={normalizeSitePath(item.href, "/")}>{item.label}</Link>
+                    <SiteNavLink
+                      href={item.href}
+                      fallbackPath="/"
+                      activeClassName="site-footer__link--active"
+                    >
+                      {item.label}
+                    </SiteNavLink>
                   </li>
                 ))}
               </ul>
@@ -94,9 +99,9 @@ export default function SiteFooter({
           ) : null}
 
           {contactColumn ? (
-            <Link href={ctaHref} className="site-footer__cta-button">
+            <SiteNavLink href={ctaHref} className="site-footer__cta-button" fallbackPath="/contact">
               {ctaLabel}
-            </Link>
+            </SiteNavLink>
           ) : null}
         </div>
       </div>

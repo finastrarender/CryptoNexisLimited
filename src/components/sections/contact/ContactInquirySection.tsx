@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import type { z } from "zod";
 import type { contactInquiryDataSchema } from "@/schemas/sections";
+import ContactLeadFieldError from "@/components/forms/ContactLeadFieldError";
+import { useContactLeadForm } from "@/hooks/useContactLeadForm";
 import SimpleIcon from "../SimpleIcon";
 
 type ContactInquiryContent = z.infer<typeof contactInquiryDataSchema>;
@@ -66,9 +67,6 @@ function resolveHqContacts(content: ContactInquiryContent) {
 }
 
 export default function ContactInquirySection({ content }: { content: ContactInquiryContent }) {
-  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "err">("idle");
-  const [feedback, setFeedback] = useState("");
-
   const formFields = content.formFields ?? {};
   const heroEyebrow = content.heroEyebrow?.trim() || DEFAULT_EYEBROW;
   const heroTitle = resolveHeroTitle(content);
@@ -107,47 +105,11 @@ export default function ContactInquirySection({ content }: { content: ContactInq
       DEFAULT_MATRIX.mapImage,
   };
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("loading");
-    const form = e.currentTarget;
-    const fd = new FormData(form);
-    const body = {
-      name: String(fd.get("name") ?? ""),
-      email: String(fd.get("email") ?? ""),
-      phone: "",
-      company: "",
-      inquiryType: String(fd.get("subject") ?? ""),
-      message: String(fd.get("message") ?? ""),
-    };
-
-    try {
-      const res = await fetch("/api/v1/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setStatus("err");
-        setFeedback(
-          (json?.error?.message as string) ||
-            formFields.errorMessage ||
-            "Something went wrong. Please try again.",
-        );
-        return;
-      }
-      setStatus("ok");
-      setFeedback(
-        formFields.successMessage ||
-          "Thank you — our institutional relations team will be in touch shortly.",
-      );
-      form.reset();
-    } catch {
-      setStatus("err");
-      setFeedback(formFields.errorMessage || "Network error. Please try again.");
-    }
-  }
+  const { registerField, onSubmit, status, feedback, formState: { errors } } =
+    useContactLeadForm("contact", {
+      successMessage: formFields.successMessage,
+      errorMessage: formFields.errorMessage,
+    });
 
   return (
     <div className="cx-contact">
@@ -175,53 +137,86 @@ export default function ContactInquirySection({ content }: { content: ContactInq
                 suppressHydrationWarning
               >
                 <div className="cx-contact__form-row">
-                  <label className="cx-contact__field">
+                  <label
+                    className={`cx-contact__field${errors.name ? " cx-contact__field--invalid" : ""}`}
+                  >
                     <span className="cx-contact__label">{nameLabel}</span>
                     <input
                       suppressHydrationWarning
-                      name="name"
                       type="text"
-                      required
                       autoComplete="name"
                       className="cx-contact__input"
                       placeholder={namePlaceholder}
+                      aria-invalid={errors.name ? true : undefined}
+                      aria-describedby={errors.name ? "contact-name-error" : undefined}
+                      {...registerField("name")}
+                    />
+                    <ContactLeadFieldError
+                      id="contact-name-error"
+                      message={errors.name?.message}
+                      className="cx-contact__field-error"
                     />
                   </label>
-                  <label className="cx-contact__field">
+
+                  <label
+                    className={`cx-contact__field${errors.email ? " cx-contact__field--invalid" : ""}`}
+                  >
                     <span className="cx-contact__label">{emailLabel}</span>
                     <input
                       suppressHydrationWarning
-                      name="email"
                       type="email"
-                      required
                       autoComplete="email"
                       className="cx-contact__input"
                       placeholder={emailPlaceholder}
+                      aria-invalid={errors.email ? true : undefined}
+                      aria-describedby={errors.email ? "contact-email-error" : undefined}
+                      {...registerField("email")}
+                    />
+                    <ContactLeadFieldError
+                      id="contact-email-error"
+                      message={errors.email?.message}
+                      className="cx-contact__field-error"
                     />
                   </label>
                 </div>
 
-                <label className="cx-contact__field">
+                <label
+                  className={`cx-contact__field${errors.subject ? " cx-contact__field--invalid" : ""}`}
+                >
                   <span className="cx-contact__label">{subjectLabel}</span>
                   <input
                     suppressHydrationWarning
-                    name="subject"
                     type="text"
-                    required
                     className="cx-contact__input"
                     placeholder={subjectPlaceholder}
+                    aria-invalid={errors.subject ? true : undefined}
+                    aria-describedby={errors.subject ? "contact-subject-error" : undefined}
+                    {...registerField("subject")}
+                  />
+                  <ContactLeadFieldError
+                    id="contact-subject-error"
+                    message={errors.subject?.message}
+                    className="cx-contact__field-error"
                   />
                 </label>
 
-                <label className="cx-contact__field cx-contact__field--area">
+                <label
+                  className={`cx-contact__field cx-contact__field--area${errors.message ? " cx-contact__field--invalid" : ""}`}
+                >
                   <span className="cx-contact__label">{messageLabel}</span>
                   <textarea
                     suppressHydrationWarning
-                    name="message"
-                    required
                     rows={5}
                     className="cx-contact__input cx-contact__textarea"
                     placeholder={messagePlaceholder}
+                    aria-invalid={errors.message ? true : undefined}
+                    aria-describedby={errors.message ? "contact-message-error" : undefined}
+                    {...registerField("message")}
+                  />
+                  <ContactLeadFieldError
+                    id="contact-message-error"
+                    message={errors.message?.message}
+                    className="cx-contact__field-error"
                   />
                 </label>
 

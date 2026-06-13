@@ -1,6 +1,6 @@
-import Link from "next/link";
 import type { z } from "zod";
 import type { servicesLicensingDataSchema } from "@/schemas/sections";
+import ServicesLicensingIcon from "@/components/icons/ServicesLicensingIcon";
 import SimpleIcon from "@/components/sections/SimpleIcon";
 
 type ServicesLicensingContent = z.infer<typeof servicesLicensingDataSchema>;
@@ -63,52 +63,8 @@ const DEFAULT_RELIABILITY_TITLE = "Institutional Reliability.";
 const DEFAULT_RELIABILITY_DESCRIPTION =
   "Our infrastructure is built on the premise of architectural precision. We eliminate volatility through rigorous compliance and verified blockchain stamps.";
 
-function BlocksIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="3" y="8" width="7" height="7" fill="none" stroke="currentColor" strokeWidth="1.4" />
-      <rect x="14" y="4" width="7" height="7" fill="none" stroke="currentColor" strokeWidth="1.4" />
-      <rect x="10" y="14" width="7" height="7" fill="none" stroke="currentColor" strokeWidth="1.4" />
-      <path
-        d="M10 11.5H14M17.5 11v3M13.5 17.5H14"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        fill="none"
-      />
-    </svg>
-  );
-}
-
-function ShieldCheckIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        d="M12 2.5 5.5 5.2v5.8c0 4.6 2.8 8.2 6.5 9.8 3.7-1.6 6.5-5.2 6.5-9.8V5.2L12 2.5z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M8.5 12.2 10.8 14.5 15.5 9.8"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function ServiceCardIcon({ icon }: { icon?: string }) {
-  if (icon === "shield-check") {
-    return <ShieldCheckIcon className="sl-licensing__card-icon-svg" />;
-  }
-  if (icon === "blocks") {
-    return <BlocksIcon className="sl-licensing__card-icon-svg" />;
-  }
-  return <SimpleIcon name={icon || "nodes"} className="sl-licensing__card-icon-svg" />;
+  return <ServicesLicensingIcon name={icon || "nodes"} className="sl-licensing__card-icon-svg" />;
 }
 
 export default function ServicesLicensingSection({
@@ -196,9 +152,7 @@ export default function ServicesLicensingSection({
           </div>
 
           <aside className="sl-licensing__compliance">
-            <Link href="/about" className="sl-licensing__compliance-text">
-              {complianceNotice}
-            </Link>
+            <p className="sl-licensing__compliance-text">{complianceNotice}</p>
             <span className="sl-licensing__compliance-watermark" aria-hidden="true">
               <SimpleIcon name="shield" className="sl-licensing__compliance-icon" />
             </span>

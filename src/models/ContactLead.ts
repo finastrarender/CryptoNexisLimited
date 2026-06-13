@@ -8,6 +8,13 @@ const contactLeadSchema = new Schema(
     company: { type: String, trim: true },
     inquiryType: { type: String, trim: true },
     message: { type: String, required: true, trim: true },
+    source: {
+      type: String,
+      enum: ["contact", "projects"],
+      default: "contact",
+      index: true,
+      trim: true,
+    },
   },
   { timestamps: true },
 );
