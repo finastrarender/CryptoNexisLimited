@@ -12976,7 +12976,7 @@ button {
   border-bottom: 1px solid #e0e0e0;
 }
 
-.cx-contact__form > .cx-contact__form-row:first-child .cx-contact__field {
+.cx-contact__form > .cx-contact__form-row:first-child .cx-contact__field:first-child {
   padding-top: 0;
 }
 
@@ -13296,6 +13296,10 @@ a.cx-contact__hq-value:focus-visible {
   .cx-contact__form-row {
     grid-template-columns: 1fr;
     column-gap: 0;
+  }
+
+  .cx-contact__form-row .cx-contact__field + .cx-contact__field {
+    padding-top: clamp(10px, 1.2vw, 14px);
   }
 
   .cx-contact__submit {
