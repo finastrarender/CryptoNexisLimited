@@ -10,7 +10,9 @@ import {
 import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import ImageUploadField from "@/components/admin/ImageUploadField";
 import ContactHqIconPicker from "@/components/admin/ContactHqIconPicker";
+import CapabilityIconPicker from "@/components/admin/CapabilityIconPicker";
 import ProjectsIntegrityIconPicker from "@/components/admin/ProjectsIntegrityIconPicker";
+import { PROJECTS_INTEGRITY_DEFAULT_ITEMS } from "@/components/icons/ProjectsIntegrityIcon";
 import ServicesLicensingIconPicker from "@/components/admin/ServicesLicensingIconPicker";
 import SectionSaveFooter from "@/components/admin/SectionSaveFooter";
 import IconPicker, { HOME_SERVICE_CARD_ICON_OPTIONS } from "./IconPicker";
@@ -2671,14 +2673,14 @@ function toGlobalStandardsDefaultValues(
     pillars:
       rawPillars.length > 0
         ? rawPillars.map((pillar) => ({
-            icon: (pillar.icon as string) ?? "spark",
+            icon: (pillar.icon as string) ?? "tokenize",
             title: (pillar.title as string) ?? "",
             description: (pillar.description as string) ?? "",
           }))
         : [
             { icon: "tokenize", title: "Asset Tokenization", description: "" },
-            { icon: "architecture", title: "Contract Architecture", description: "" },
-            { icon: "compliance", title: "Regulatory Advisory", description: "" },
+            { icon: "compass", title: "Contract Architecture", description: "" },
+            { icon: "gavel", title: "Regulatory Advisory", description: "" },
           ],
   };
 }
@@ -2777,12 +2779,22 @@ export function GlobalStandardsSectionForm({
           >
             <label>
               Pillar icon
-              <input
-                {...register(`pillars.${index}.icon` as const, {
-                  required: "Pillar icon is required",
-                })}
-                placeholder="security"
+              <Controller
+                control={control}
+                name={`pillars.${index}.icon` as const}
+                rules={{ required: "Pillar icon is required" }}
+                render={({ field }) => (
+                  <CapabilityIconPicker
+                    value={typeof field.value === "string" ? field.value : "tokenize"}
+                    onChange={field.onChange}
+                  />
+                )}
               />
+              {errors.pillars?.[index]?.icon ? (
+                <p className="admin-field-error">
+                  {errors.pillars[index]?.icon?.message}
+                </p>
+              ) : null}
             </label>
 
             <label>
@@ -2811,7 +2823,7 @@ export function GlobalStandardsSectionForm({
         ))}
         <button
           type="button"
-          onClick={() => append({ icon: "spark", title: "", description: "" })}
+          onClick={() => append({ icon: "tokenize", title: "", description: "" })}
         >
           Add pillar
         </button>
@@ -5916,6 +5928,7 @@ type AboutLeadershipMemberFormValue = {
   role: string;
   bio: string;
   image: string;
+  imageAlt: string;
 };
 
 type AboutLeadershipFormValues = {
@@ -5936,8 +5949,9 @@ function toAboutLeadershipDefaults(data: Record<string, unknown>): AboutLeadersh
             role: (member.role as string) ?? "",
             bio: (member.bio as string) ?? "",
             image: (member.image as string) ?? "",
+            imageAlt: (member.imageAlt as string) ?? "",
           }))
-        : [{ name: "", role: "", bio: "", image: "" }],
+        : [{ name: "", role: "", bio: "", image: "", imageAlt: "" }],
   };
 }
 
@@ -5977,6 +5991,7 @@ export function AboutLeadershipSectionForm({
           role: member.role.trim(),
           bio: member.bio.trim(),
           image: member.image.trim(),
+          imageAlt: member.imageAlt.trim() || undefined,
         }))
         .filter((member) => member.name || member.role || member.bio || member.image),
     });
@@ -6066,6 +6081,17 @@ export function AboutLeadershipSectionForm({
               <p className="admin-field-error">{errors.members[index]?.image?.message}</p>
             ) : null}
 
+            <label>
+              Portrait alt text
+              <input
+                {...register(`members.${index}.imageAlt`)}
+                placeholder="Portrait of leader name and role"
+              />
+              <FieldHint>
+                Leave blank to auto-generate from name and role.
+              </FieldHint>
+            </label>
+
             <button
               type="button"
               className="admin-button-secondary"
@@ -6086,6 +6112,7 @@ export function AboutLeadershipSectionForm({
               role: "",
               bio: "",
               image: "",
+              imageAlt: "",
             })
           }
         >
@@ -6199,6 +6226,7 @@ type ProjectsGridItemFormValue = {
   category: string;
   title: string;
   image: string;
+  imageAlt: string;
 };
 
 type ProjectsGridFormValues = {
@@ -6214,8 +6242,9 @@ function toProjectsGridDefaultValues(data: Record<string, unknown>): ProjectsGri
             category: (item.category as string) ?? "",
             title: (item.title as string) ?? "",
             image: (item.image as string) ?? "",
+            imageAlt: (item.imageAlt as string) ?? "",
           }))
-        : [{ category: "", title: "", image: "" }],
+        : [{ category: "", title: "", image: "", imageAlt: "" }],
   };
 }
 
@@ -6252,6 +6281,7 @@ export function ProjectsGridSectionForm({
           category: item.category.trim(),
           title: item.title.trim(),
           image: item.image.trim(),
+          imageAlt: item.imageAlt.trim() || undefined,
         }))
         .filter((item) => item.category || item.title || item.image),
     });
@@ -6323,6 +6353,17 @@ export function ProjectsGridSectionForm({
               <p className="admin-field-error">{errors.items[index]?.image?.message}</p>
             ) : null}
 
+            <label>
+              Image alt text
+              <input
+                {...register(`items.${index}.imageAlt`)}
+                placeholder="Describe the project image for accessibility and SEO"
+              />
+              <FieldHint>
+                Leave blank to auto-generate from project title and category.
+              </FieldHint>
+            </label>
+
             <button
               type="button"
               className="admin-button-secondary"
@@ -6342,6 +6383,7 @@ export function ProjectsGridSectionForm({
               category: "",
               title: "",
               image: "",
+              imageAlt: "",
             })
           }
         >
@@ -6379,17 +6421,15 @@ function toProjectsIntegrityDefaultValues(data: Record<string, unknown>): Projec
     items:
       items.length > 0
         ? items.map((item) => ({
-            icon: (item.icon as string) ?? "verified",
+            icon: (item.icon as string) ?? "badgeCheck",
             title: (item.title as string) ?? "",
             description: (item.description as string) ?? "",
           }))
-        : [
-            {
-              icon: "verified",
-              title: "",
-              description: "",
-            },
-          ],
+        : PROJECTS_INTEGRITY_DEFAULT_ITEMS.map((item) => ({
+            icon: item.icon,
+            title: item.title,
+            description: item.description,
+          })),
   };
 }
 
@@ -6423,7 +6463,7 @@ export function ProjectsIntegritySectionForm({
       description: values.description.trim(),
       items: values.items
         .map((item) => ({
-          icon: item.icon.trim() || "verified",
+          icon: item.icon.trim() || "badgeCheck",
           title: item.title.trim(),
           description: item.description.trim(),
         }))
@@ -6520,7 +6560,7 @@ export function ProjectsIntegritySectionForm({
           className="admin-button-secondary"
           onClick={() =>
             append({
-              icon: "verified",
+              icon: "badgeCheck",
               title: "",
               description: "",
             })

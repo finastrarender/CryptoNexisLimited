@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/site-url";
+import {
+  buildSocialMetadata,
+  DEFAULT_DESCRIPTION,
+} from "@/lib/metadata/social";
 import "../styles.css";
 
 export const metadata: Metadata = {
@@ -7,9 +11,13 @@ export const metadata: Metadata = {
     default: "CRYPTONEXIS LIMITED",
     template: "%s | Cryptonexis Limited",
   },
-  description:
-    "Cryptonexis Limited — RAK Economic Zone licensed NFT creator and issuer for institutional digital asset creation, issuance, and compliance-first advisory.",
+  description: DEFAULT_DESCRIPTION,
   metadataBase: new URL(getSiteUrl()),
+  ...buildSocialMetadata({
+    title: "CRYPTONEXIS LIMITED | Licensed NFT Creator and Issuer",
+    description: DEFAULT_DESCRIPTION,
+    path: "/",
+  }),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

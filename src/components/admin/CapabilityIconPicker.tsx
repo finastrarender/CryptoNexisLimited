@@ -1,26 +1,26 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import ProjectsIntegrityIcon, {
-  PROJECTS_INTEGRITY_ICON_OPTIONS,
-  projectsIntegrityIconLabel,
-} from "@/components/icons/ProjectsIntegrityIcon";
+import CapabilityIcon, {
+  CAPABILITY_ICON_OPTIONS,
+  capabilityIconLabel,
+} from "@/components/icons/CapabilityIcon";
 
 type Props = {
   value: unknown;
   onChange: (value: string) => void;
 };
 
-export default function ProjectsIntegrityIconPicker({ value, onChange }: Props) {
+export default function CapabilityIconPicker({ value, onChange }: Props) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const selected = typeof value === "string" && value ? value : "badgeCheck";
-  const selectedLabel = projectsIntegrityIconLabel(selected);
+  const selected = typeof value === "string" && value ? value : "tokenize";
+  const selectedLabel = capabilityIconLabel(selected);
 
   const filteredOptions = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return PROJECTS_INTEGRITY_ICON_OPTIONS;
-    return PROJECTS_INTEGRITY_ICON_OPTIONS.filter(
+    if (!query) return CAPABILITY_ICON_OPTIONS;
+    return CAPABILITY_ICON_OPTIONS.filter(
       (option) =>
         option.key.toLowerCase().includes(query) ||
         option.label.toLowerCase().includes(query),
@@ -35,11 +35,11 @@ export default function ProjectsIntegrityIconPicker({ value, onChange }: Props) 
         onClick={() => setOpen((prev) => !prev)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        aria-label="Choose icon"
+        aria-label="Choose capability icon"
       >
         <span className="admin-icon-picker__trigger-content">
           <span className="admin-integrity-icon-picker__preview" aria-hidden="true">
-            <ProjectsIntegrityIcon name={selected} className="admin-integrity-icon-picker__icon" />
+            <CapabilityIcon name={selected} className="admin-integrity-icon-picker__icon" />
           </span>
           <span>{selectedLabel}</span>
         </span>
@@ -76,7 +76,7 @@ export default function ProjectsIntegrityIconPicker({ value, onChange }: Props) 
                   setSearch("");
                 }}
               >
-                <ProjectsIntegrityIcon
+                <CapabilityIcon
                   name={option.key}
                   className="admin-integrity-icon-picker__icon"
                 />

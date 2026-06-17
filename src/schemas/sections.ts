@@ -163,6 +163,7 @@ const projectsGridItemSchema = z.object({
   category: z.string(),
   title: z.string(),
   image: z.string(),
+  imageAlt: z.string().optional(),
 });
 
 export const projectsHeroDataSchema = z.object({
@@ -198,6 +199,7 @@ export const projectsPartnersDataSchema = z.object({
   formTitle: z.string().optional(),
   submitLabel: z.string().optional(),
   mapImage: z.string().optional(),
+  mapImageAlt: z.string().optional(),
   hqLabel: z.string().optional(),
   hqTitle: z.string().optional(),
   hqAddress: z.string().optional(),
@@ -442,6 +444,7 @@ const contactLocationMatrixSchema = z.object({
   title: z.string().optional(),
   subtitle: z.string().optional(),
   mapImage: z.string().optional(),
+  mapImageAlt: z.string().optional(),
   linkLabel: z.string().optional(),
   linkHref: z.string().optional(),
 });
@@ -510,6 +513,7 @@ export const aboutLeadershipDataSchema = z.object({
         role: z.string(),
         bio: z.string(),
         image: z.string(),
+        imageAlt: z.string().optional(),
       }),
     )
     .min(1),

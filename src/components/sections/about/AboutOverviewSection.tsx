@@ -1,5 +1,6 @@
 import type { z } from "zod";
 import type { aboutOverviewDataSchema } from "@/schemas/sections";
+import { aboutSectionImageAlt } from "@/lib/image-alt";
 
 type AboutOverviewContent = z.infer<typeof aboutOverviewDataSchema>;
 
@@ -36,7 +37,11 @@ const AboutOverviewSection = ({ content }: { content: AboutOverviewContent }) =>
             <div className="about-intro__image-frame about-intro__image-frame--primary">
               <img
                 src={primaryImage}
-                alt=""
+                alt={aboutSectionImageAlt({
+                  title: content.title,
+                  context: content.eyebrow,
+                  variant: "primary",
+                })}
                 width={760}
                 height={560}
                 decoding="async"
@@ -46,7 +51,11 @@ const AboutOverviewSection = ({ content }: { content: AboutOverviewContent }) =>
             <div className="about-intro__image-frame about-intro__image-frame--secondary">
               <img
                 src={secondaryImage}
-                alt=""
+                alt={aboutSectionImageAlt({
+                  title: content.title,
+                  context: content.eyebrow,
+                  variant: "secondary",
+                })}
                 width={620}
                 height={420}
                 decoding="async"

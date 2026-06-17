@@ -1,3 +1,4 @@
+import type { ComponentType, ReactNode } from "react";
 import {
   Award,
   BadgeCheck,
@@ -5,7 +6,7 @@ import {
   BookOpen,
   Building2,
   CircleCheck,
-  Compass,
+  DraftingCompass,
   Eye,
   FileText,
   Forward,
@@ -42,56 +43,41 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+/** Curated first — matches the Projects integrity reference row icons. */
 export const PROJECTS_INTEGRITY_ICON_OPTIONS = [
-  { key: "verified", label: "Verified badge" },
-  { key: "location", label: "Location (custom)" },
-  { key: "compass", label: "Compass (custom)" },
-  { key: "eye", label: "Eye / transparency" },
-  { key: "heart", label: "Heart" },
-  { key: "image", label: "Image / gallery" },
-  { key: "smile", label: "Smiley" },
-  { key: "share", label: "Share / network" },
-  { key: "forward", label: "Forward" },
-  { key: "bell", label: "Notification bell" },
-  { key: "phone", label: "Phone" },
-  { key: "thumbsUp", label: "Thumbs up" },
-  { key: "send", label: "Send / paper plane" },
-  { key: "message", label: "Chat bubble" },
-  { key: "plusSquare", label: "Add / plus" },
-  { key: "home", label: "Home" },
-  { key: "userCircle", label: "User (circle)" },
-  { key: "badgeCheck", label: "Badge check" },
-  { key: "megaphone", label: "Megaphone" },
-  { key: "globe", label: "Globe" },
-  { key: "paperclip", label: "Attachment" },
-  { key: "mapPin", label: "Map pin" },
-  { key: "pointer", label: "Pointer / click" },
-  { key: "search", label: "Search" },
-  { key: "mail", label: "Email" },
-  { key: "mic", label: "Microphone" },
-  { key: "video", label: "Video" },
-  { key: "user", label: "User profile" },
-  { key: "shield", label: "Shield" },
+  { key: "badgeCheck", label: "Licensed / badge check" },
+  { key: "mapPin", label: "Location / map pin" },
+  { key: "compassNav", label: "Expertise / drafting compass" },
+  { key: "eyeOpen", label: "Transparency / eye" },
   { key: "shieldCheck", label: "Shield check" },
-  { key: "lock", label: "Lock / security" },
+  { key: "landmark", label: "Institution" },
+  { key: "scale", label: "Legal / scale" },
+  { key: "handshake", label: "Partnership" },
+  { key: "globe", label: "Global reach" },
+  { key: "lock", label: "Security lock" },
   { key: "award", label: "Award" },
   { key: "fileText", label: "Document" },
   { key: "building", label: "Building" },
-  { key: "handshake", label: "Handshake" },
-  { key: "scale", label: "Legal / scale" },
-  { key: "landmark", label: "Institution" },
   { key: "checkCircle", label: "Check circle" },
-  { key: "compassNav", label: "Compass" },
-  { key: "eyeOpen", label: "Eye" },
-  { key: "target", label: "Target" },
-  { key: "zap", label: "Energy / zap" },
-  { key: "bookOpen", label: "Book" },
+  { key: "target", label: "Strategic target" },
+  { key: "zap", label: "Innovation" },
+  { key: "bookOpen", label: "Knowledge" },
   { key: "graduationCap", label: "Education" },
+  { key: "heart", label: "Heart" },
+  { key: "share", label: "Network" },
+  { key: "mail", label: "Email" },
+  { key: "phone", label: "Phone" },
+  { key: "search", label: "Search" },
+  { key: "user", label: "Profile" },
+  { key: "shield", label: "Shield" },
 ] as const;
 
-export const PROJECTS_INTEGRITY_ICON_KEYS = PROJECTS_INTEGRITY_ICON_OPTIONS.map(
-  (option) => option.key,
-);
+export const PROJECTS_INTEGRITY_DEFAULT_ITEMS = [
+  { icon: "badgeCheck", title: "Licensed and compliant", description: "" },
+  { icon: "mapPin", title: "Strategic UAE location", description: "" },
+  { icon: "compassNav", title: "Focused expertise", description: "" },
+  { icon: "eyeOpen", title: "Transparent operations", description: "" },
+] as const;
 
 export type ProjectsIntegrityIconKey = (typeof PROJECTS_INTEGRITY_ICON_OPTIONS)[number]["key"];
 
@@ -99,7 +85,23 @@ const LABEL_BY_KEY = Object.fromEntries(
   PROJECTS_INTEGRITY_ICON_OPTIONS.map((option) => [option.key, option.label]),
 ) as Record<string, string>;
 
+/** Legacy CMS keys and aliases → Lucide icon keys. */
+const ICON_ALIASES: Record<string, string> = {
+  verified: "badgeCheck",
+  location: "mapPin",
+  compass: "compassNav",
+  eye: "eyeOpen",
+  badgeCheck: "badgeCheck",
+  mapPin: "mapPin",
+  compassNav: "compassNav",
+  eyeOpen: "eyeOpen",
+};
+
 const LUCIDE_BY_KEY: Record<string, LucideIcon> = {
+  badgeCheck: BadgeCheck,
+  mapPin: MapPin,
+  compassNav: DraftingCompass,
+  eyeOpen: Eye,
   heart: Heart,
   image: Image,
   smile: Smile,
@@ -113,11 +115,9 @@ const LUCIDE_BY_KEY: Record<string, LucideIcon> = {
   plusSquare: SquarePlus,
   home: Home,
   userCircle: UserCircle,
-  badgeCheck: BadgeCheck,
   megaphone: Megaphone,
   globe: Globe,
   paperclip: Paperclip,
-  mapPin: MapPin,
   pointer: Pointer,
   search: Search,
   mail: Mail,
@@ -134,8 +134,6 @@ const LUCIDE_BY_KEY: Record<string, LucideIcon> = {
   scale: Scale,
   landmark: Landmark,
   checkCircle: CircleCheck,
-  compassNav: Compass,
-  eyeOpen: Eye,
   target: Target,
   zap: Zap,
   bookOpen: BookOpen,
@@ -143,8 +141,97 @@ const LUCIDE_BY_KEY: Record<string, LucideIcon> = {
 };
 
 export function projectsIntegrityIconLabel(key: string): string {
-  return LABEL_BY_KEY[key] ?? key;
+  const resolved = ICON_ALIASES[key] ?? key;
+  return LABEL_BY_KEY[resolved] ?? LABEL_BY_KEY[key] ?? key;
 }
+
+function resolveIconKey(name: string): string {
+  const trimmed = name.trim();
+  if (!trimmed) return "badgeCheck";
+  return ICON_ALIASES[trimmed] ?? trimmed;
+}
+
+type IconSvgProps = {
+  className?: string;
+  size?: number;
+};
+
+function IntegrityIconSvg({ className, size = 22, children }: IconSvgProps & { children: ReactNode }) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+      {children}
+    </svg>
+  );
+}
+
+/** Reference row icons — filled badge/pin, outline compass, eye with filled pupil. */
+function BadgeCheckFilled({ className, size }: IconSvgProps) {
+  return (
+    <IntegrityIconSvg className={className} size={size}>
+      <path
+        d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"
+        fill="currentColor"
+      />
+      <path
+        d="m9 12 2 2 4-4"
+        fill="none"
+        className="cx-projects-integrity__icon-knockout"
+        strokeWidth="2.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </IntegrityIconSvg>
+  );
+}
+
+function MapPinFilled({ className, size }: IconSvgProps) {
+  return (
+    <IntegrityIconSvg className={className} size={size}>
+      <path
+        d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+        fill="currentColor"
+      />
+      <circle cx="12" cy="10" r="2.5" className="cx-projects-integrity__icon-knockout-fill" />
+    </IntegrityIconSvg>
+  );
+}
+
+function DraftingCompassOutline({ className, size }: IconSvgProps) {
+  return (
+    <IntegrityIconSvg className={className} size={size}>
+      <g fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m12.99 6.74 1.93 3.44" />
+        <path d="M19.136 12a10 10 0 0 1-14.271 0" />
+        <path d="m21 21-2.16-3.84" />
+        <path d="m3 21 8.02-14.26" />
+        <circle cx="12" cy="5" r="2" />
+      </g>
+    </IntegrityIconSvg>
+  );
+}
+
+function EyeFilled({ className, size }: IconSvgProps) {
+  return (
+    <IntegrityIconSvg className={className} size={size}>
+      <path
+        d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="12" r="3" fill="currentColor" />
+    </IntegrityIconSvg>
+  );
+}
+
+const REFERENCE_FILLED_ICONS: Record<string, ComponentType<IconSvgProps>> = {
+  badgeCheck: BadgeCheckFilled,
+  mapPin: MapPinFilled,
+  compassNav: DraftingCompassOutline,
+  eyeOpen: EyeFilled,
+};
 
 type Props = {
   name: string;
@@ -152,87 +239,22 @@ type Props = {
   size?: number;
 };
 
-function CustomIntegritySvg({ name, className }: { name: string; className: string }) {
-  switch (name) {
-    case "verified":
-      return (
-        <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            d="M12 2.5 14.8 3.6l2.5-0.3 1.2 2.2 2.1 1.1-0.3 2.5 1.1 2.1-2.2 1.2-1.1 2.1-2.5-0.3-1.9 1.9-2.5 0.3-2.1-1.1-2.2-1.2-1.2-2.2-2.1-1.1 0.3-2.5-1.1-2.1 2.2-1.2 1.2-2.2 2.5 0.3L12 2.5z"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.3"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M8.5 12.2 10.8 14.5 15.5 9.8"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      );
-    case "location":
-      return (
-        <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            d="M12 21s6-5.33 6-10a6 6 0 1 0-12 0c0 4.67 6 10 6 10z"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinejoin="round"
-          />
-          <circle cx="12" cy="11" r="2.2" fill="none" stroke="currentColor" strokeWidth="1.4" />
-        </svg>
-      );
-    case "compass":
-      return (
-        <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="1.4" />
-          <path
-            d="M12 3v3M12 18v3M3 12h3M18 12h3M7.05 7.05l2.12 2.12M14.83 14.83l2.12 2.12M16.95 7.05l-2.12 2.12M9.17 14.83l-2.12 2.12"
-            stroke="currentColor"
-            strokeWidth="1.2"
-          />
-          <path d="M14.5 9.5 12 12l-2.5 4.5 4.5-2.5L12 12l2.5-2.5z" fill="currentColor" />
-        </svg>
-      );
-    case "eye":
-      return (
-        <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinejoin="round"
-          />
-          <circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
-        </svg>
-      );
-    default:
-      return null;
-  }
-}
-
-export default function ProjectsIntegrityIcon({ name, className, size = 22 }: Props) {
+export default function ProjectsIntegrityIcon({
+  name,
+  className,
+  size = 22,
+}: Props) {
   const svgClass = className ?? "cx-projects-integrity__icon-svg";
-  const custom = CustomIntegritySvg({ name, className: svgClass });
-  if (custom) return custom;
+  const resolvedKey = resolveIconKey(name);
+  const ReferenceIcon = REFERENCE_FILLED_ICONS[resolvedKey];
 
-  const Lucide = LUCIDE_BY_KEY[name];
-  if (Lucide) {
-    return (
-      <Lucide
-        className={svgClass}
-        size={size}
-        strokeWidth={1.5}
-        aria-hidden
-      />
-    );
+  if (ReferenceIcon) {
+    return <ReferenceIcon className={svgClass} size={size} />;
   }
 
-  return <Shield className={svgClass} size={size} strokeWidth={1.5} aria-hidden />;
+  const Lucide = LUCIDE_BY_KEY[resolvedKey] ?? BadgeCheck;
+
+  return (
+    <Lucide className={svgClass} size={size} strokeWidth={1.75} aria-hidden />
+  );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
+import { uploadedImagePreviewAlt } from "@/lib/image-alt";
 
 type ImageUploadFieldProps = {
   label: string;
@@ -182,7 +183,7 @@ export default function ImageUploadField({
         <div style={{ display: "grid", gap: 8 }}>
           <img
             src={value}
-            alt=""
+            alt={uploadedImagePreviewAlt(label)}
             width={240}
             height={240}
             style={{ width: 240, maxWidth: "100%", borderRadius: 12, border: "1px solid #e2e8f0" }}

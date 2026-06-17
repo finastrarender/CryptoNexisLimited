@@ -233,9 +233,9 @@ export async function GET(_request: Request, context: RouteContext) {
     status: "draft",
     sections: buildHomeSections(),
     publishedSections: [],
-    seoTitle: "Adam Technology L.L.C.",
+    seoTitle: "CRYPTONEXIS LIMITED | Licensed NFT Creator and Issuer",
     seoDescription:
-      "Adam Technology L.L.C. delivers enterprise-grade cybersecurity, cloud & data infrastructure, and custom software engineering from Dubai, UAE.",
+      "Cryptonexis Limited — RAK Economic Zone licensed NFT creation and issuance for institutional digital assets in the UAE.",
   });
 
   return jsonData(created.toObject());

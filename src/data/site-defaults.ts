@@ -25,6 +25,7 @@ export const defaultFooterColumns: FooterColumn[] = [
     contact: [
       { type: "location", value: "RAK Economic Zone, Building 4, Ras Al Khaimah, United Arab Emirates" },
       { type: "mail", value: "inquiry@cryptonexis.com" },
+      { type: "phone", value: "+971 (0) 7 204 1111" },
     ],
   },
 ];

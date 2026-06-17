@@ -14,6 +14,16 @@ function resolveHeroImage(src?: string) {
   return trimmed;
 }
 
+function resolveHeroTitle(title: string[] | undefined): string {
+  if (Array.isArray(title) && title.length > 0) {
+    return title
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .join(" ");
+  }
+  return "Licensed NFT Creator and Issuer";
+}
+
 export default function HeroSection({
   content,
   anchorId,
@@ -29,10 +39,9 @@ export default function HeroSection({
       ? content.badge
       : "INSTITUTIONAL DIGITAL ASSETS";
 
-  const titleLines =
-    Array.isArray(content.title) && content.title.length > 0
-      ? content.title
-      : ["Licensed NFT", "Creator and", "Issuer"];
+  const heroTitle = resolveHeroTitle(
+    Array.isArray(content.title) ? content.title : undefined,
+  );
 
   const lede =
     typeof content.lede === "string" && content.lede.trim() !== ""
@@ -57,11 +66,7 @@ export default function HeroSection({
       <div className="section-shell cx-hero__inner">
         <div className="cx-hero__copy">
           <p className="cx-hero__label">{label}</p>
-          <h1 className="cx-hero__title">
-            {titleLines.slice(0, 3).map((line) => (
-              <span key={line}>{line}</span>
-            ))}
-          </h1>
+          <h1 className="cx-hero__title">{heroTitle}</h1>
           <p className="cx-hero__lede">{lede}</p>
           <p className="cx-hero__description">{description}</p>
           <div className="cx-hero__actions">
@@ -87,7 +92,7 @@ export default function HeroSection({
                 fetchPriority="high"
               />
               <div className="cx-hero__card">
-                <p className="cx-hero__card-label">{overlayLabel}</p>
+                <h2 className="cx-hero__card-label">{overlayLabel}</h2>
                 <p className="cx-hero__card-text">{overlayText}</p>
               </div>
             </div>

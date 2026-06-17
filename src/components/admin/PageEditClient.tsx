@@ -65,7 +65,7 @@ function defaultSectionData(type: SectionType): Record<string, unknown> {
     case "hero":
       return {
         badge: "INSTITUTIONAL DIGITAL ASSETS",
-        title: ["Licensed NFT", "Creator and", "Issuer"],
+        title: ["Licensed NFT Creator and Issuer"],
         lede: "Operating in the RAK Digital Assets Oasis, Ras Al Khaimah",
         description:
           "Cryptonexis Limited is a licensed entity focused on NFT creation and NFT issuance for artists, brands, businesses, and project owners.",
@@ -267,9 +267,27 @@ function defaultSectionData(type: SectionType): Record<string, unknown> {
           "Cryptonexis operates at the intersection of regulatory compliance and technological frontier, ensuring each partnership is built on a foundation of absolute transparency.",
         items: [
           {
-            icon: "verified",
+            icon: "badgeCheck",
             title: "Licensed and compliant",
             description: "Operating under strict UAE regulatory frameworks and governance standards.",
+          },
+          {
+            icon: "mapPin",
+            title: "Strategic UAE location",
+            description:
+              "Headquartered in the RAK Economic Zone, a global hub for digital asset innovation.",
+          },
+          {
+            icon: "compassNav",
+            title: "Focused expertise",
+            description:
+              "Deep specialization in NFT architecture and institutional blockchain deployments.",
+          },
+          {
+            icon: "eyeOpen",
+            title: "Transparent operations",
+            description:
+              "Real-time reporting and absolute clarity in all asset management protocols.",
           },
         ],
       };

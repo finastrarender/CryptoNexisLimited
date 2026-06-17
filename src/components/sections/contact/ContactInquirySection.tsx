@@ -5,6 +5,7 @@ import type { contactInquiryDataSchema } from "@/schemas/sections";
 import ContactLeadFieldError from "@/components/forms/ContactLeadFieldError";
 import { useContactLeadForm } from "@/hooks/useContactLeadForm";
 import SimpleIcon from "../SimpleIcon";
+import { regionalHubMapAlt } from "@/lib/image-alt";
 
 type ContactInquiryContent = z.infer<typeof contactInquiryDataSchema>;
 
@@ -38,6 +39,8 @@ const DEFAULT_MATRIX = {
   title: "Ras Al Khaimah",
   subtitle: "RAKEZ ECONOMIC ZONE HUB",
   mapImage: "/contact/uae-map.jpg",
+  mapImageAlt:
+    "Regional map of Ras Al Khaimah RAK Economic Zone hub — Cryptonexis Limited institutional location",
   linkLabel: "OPEN REGIONAL GRID →",
   linkHref: "https://maps.google.com/?q=RAK+Economical+Zone",
 };
@@ -299,7 +302,11 @@ export default function ContactInquirySection({ content }: { content: ContactInq
             <div className="cx-contact__matrix-media">
               <img
                 src={matrix.mapImage}
-                alt=""
+                alt={regionalHubMapAlt({
+                  imageAlt: matrix.mapImageAlt,
+                  title: matrix.title,
+                  subtitle: matrix.subtitle,
+                })}
                 width={400}
                 height={400}
                 decoding="async"

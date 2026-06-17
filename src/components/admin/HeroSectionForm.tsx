@@ -75,10 +75,11 @@ export default function HeroSectionForm({
       .split("\n")
       .map((line) => line.trim())
       .filter((line) => line.length > 0);
+    const titleText = titleArray.join(" ");
 
     const payload: Record<string, unknown> = {
       badge: values.badge,
-      title: titleArray,
+      title: titleText ? [titleText] : [],
       lede: values.lede,
       description: values.description,
       primaryAction: {
@@ -123,12 +124,16 @@ export default function HeroSectionForm({
       </label>
 
       <label>
-        Title lines (one per line)
+        Hero title
         <textarea
-          rows={3}
-          {...register("titleLines", { required: "At least one title line is required" })}
-          placeholder={"Licensed NFT\nCreator and\nIssuer"}
+          rows={2}
+          {...register("titleLines", { required: "Title is required" })}
+          placeholder="Licensed NFT Creator and Issuer"
         />
+        <p className="admin-field-hint">
+          Enter as one line. Line breaks in this field are joined into flowing text; wrapping is
+          handled by the page layout.
+        </p>
         {errors.titleLines ? (
           <p className="admin-field-error">{errors.titleLines.message}</p>
         ) : null}

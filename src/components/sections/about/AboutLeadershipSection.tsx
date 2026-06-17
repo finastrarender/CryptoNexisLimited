@@ -1,5 +1,6 @@
 import type { z } from "zod";
 import type { aboutLeadershipDataSchema } from "@/schemas/sections";
+import { executivePortraitAlt } from "@/lib/image-alt";
 
 type AboutLeadershipContent = z.infer<typeof aboutLeadershipDataSchema>;
 
@@ -24,7 +25,7 @@ export default function AboutLeadershipSection({ content }: { content: AboutLead
                   <img
                     className="cx-about-leader__image"
                     src={member.image}
-                    alt=""
+                    alt={executivePortraitAlt(member)}
                     width={400}
                     height={400}
                     decoding="async"

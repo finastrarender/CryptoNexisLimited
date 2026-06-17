@@ -4,6 +4,7 @@ import type { z } from "zod";
 import type { projectsPartnersDataSchema } from "@/schemas/sections";
 import ContactLeadFieldError from "@/components/forms/ContactLeadFieldError";
 import { useContactLeadForm } from "@/hooks/useContactLeadForm";
+import { rakZoneMapAlt } from "@/lib/image-alt";
 
 type ProjectsPartnersContent = z.infer<typeof projectsPartnersDataSchema>;
 
@@ -37,10 +38,19 @@ export default function ProjectsPartnersSection({
   const contactEmail = content?.contactEmail?.trim() || DEFAULT_CONTACT.email;
 
   const placeholders = {
-    name: content?.placeholders?.name?.trim() || "Full Name",
-    email: content?.placeholders?.email?.trim() || "Institutional Email",
-    subject: content?.placeholders?.subject?.trim() || "Subject of Inquiry",
-    message: content?.placeholders?.message?.trim() || "Brief Summary of Project/Inquiry",
+    name: content?.placeholders?.name?.trim() || "Johnathan Doe",
+    email: content?.placeholders?.email?.trim() || "j.doe@institution.com",
+    subject: content?.placeholders?.subject?.trim() || "Inquiry: Asset Management Protocol",
+    message:
+      content?.placeholders?.message?.trim() ||
+      "Briefly describe your institutional requirements...",
+  };
+
+  const labels = {
+    name: "NAME",
+    email: "INSTITUTIONAL EMAIL",
+    subject: "SUBJECT",
+    message: "PROJECT SUMMARY",
   };
 
   const { registerField, onSubmit, status, feedback, formState: { errors } } =
@@ -66,7 +76,7 @@ export default function ProjectsPartnersSection({
             <label
               className={`cx-projects-partners__field${errors.name ? " cx-projects-partners__field--invalid" : ""}`}
             >
-              <span className="visually-hidden">{placeholders.name}</span>
+              <span className="cx-projects-partners__label">{labels.name}</span>
               <input
                 suppressHydrationWarning
                 type="text"
@@ -87,7 +97,7 @@ export default function ProjectsPartnersSection({
             <label
               className={`cx-projects-partners__field${errors.email ? " cx-projects-partners__field--invalid" : ""}`}
             >
-              <span className="visually-hidden">{placeholders.email}</span>
+              <span className="cx-projects-partners__label">{labels.email}</span>
               <input
                 suppressHydrationWarning
                 type="email"
@@ -108,7 +118,7 @@ export default function ProjectsPartnersSection({
             <label
               className={`cx-projects-partners__field${errors.subject ? " cx-projects-partners__field--invalid" : ""}`}
             >
-              <span className="visually-hidden">{placeholders.subject}</span>
+              <span className="cx-projects-partners__label">{labels.subject}</span>
               <input
                 suppressHydrationWarning
                 type="text"
@@ -128,7 +138,7 @@ export default function ProjectsPartnersSection({
             <label
               className={`cx-projects-partners__field cx-projects-partners__field--area${errors.message ? " cx-projects-partners__field--invalid" : ""}`}
             >
-              <span className="visually-hidden">{placeholders.message}</span>
+              <span className="cx-projects-partners__label">{labels.message}</span>
               <textarea
                 suppressHydrationWarning
                 rows={4}
@@ -171,7 +181,16 @@ export default function ProjectsPartnersSection({
 
         <aside className="cx-projects-partners__aside" aria-label="Location and contact">
           <div className="cx-projects-partners__map">
-            <img src={mapImage} alt="" width={960} height={480} decoding="async" />
+            <img
+              src={mapImage}
+              alt={rakZoneMapAlt({
+                imageAlt: content?.mapImageAlt,
+                location: hqAddress,
+              })}
+              width={960}
+              height={480}
+              decoding="async"
+            />
           </div>
           <div className="cx-projects-partners__info">
             <div className="cx-projects-partners__info-block">

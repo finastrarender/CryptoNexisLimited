@@ -4,6 +4,12 @@
  */
 import type { PublicPageView } from "@/lib/content/pages";
 import type { PageSection } from "@/types/section";
+import {
+  CONTACT_REGIONAL_MAP_ALT,
+  LEADERSHIP_IMAGE_ALTS,
+  PROJECT_GRID_IMAGE_ALTS,
+  RAK_MAP_IMAGE_ALT,
+} from "@/data/image-alt-defaults";
 
 function sid(slug: string, type: string, order: number): string {
   return `fb-${slug}-${type}-${order}`;
@@ -23,7 +29,7 @@ function sections(
 
 const homeHeroData = {
   badge: "INSTITUTIONAL DIGITAL ASSETS",
-  title: ["Licensed NFT", "Creator and", "Issuer"],
+  title: ["Licensed NFT Creator and Issuer"],
   description:
     "Cryptonexis Limited is a licensed entity focused on NFT creation and NFT issuance for artists, brands, businesses, and project owners.",
   primaryAction: { label: "VIEW SERVICES", href: "/services" },
@@ -110,18 +116,21 @@ const aboutLeadershipData = {
       role: "CHIEF EXECUTIVE OFFICER",
       bio: "Former Lead Architect at Swiss Global Assets with two decades of experience in institutional fintech and regulatory frameworks.",
       image: "/about/leader-1.jpg",
+      imageAlt: LEADERSHIP_IMAGE_ALTS["MARCUS THORNE"],
     },
     {
       name: "ELENA VANCE",
       role: "CHIEF COMPLIANCE OFFICER",
       bio: "Expert in Middle Eastern and European digital asset regulations, formerly heading the policy division at RAK International.",
       image: "/about/leader-2.jpg",
+      imageAlt: LEADERSHIP_IMAGE_ALTS["ELENA VANCE"],
     },
     {
       name: "JULIAN BECK",
       role: "CHIEF TECHNOLOGY OFFICER",
       bio: "Pioneer in cryptographic proof-of-reserve systems and former security lead for Tier-1 investment banking infrastructure.",
       image: "/about/leader-3.jpg",
+      imageAlt: LEADERSHIP_IMAGE_ALTS["JULIAN BECK"],
     },
   ],
 };
@@ -242,6 +251,7 @@ const contactInquiryData = {
     title: "Ras Al Khaimah",
     subtitle: "RAKEZ ECONOMIC ZONE HUB",
     mapImage: "/contact/uae-map.jpg",
+    mapImageAlt: CONTACT_REGIONAL_MAP_ALT,
     linkLabel: "OPEN REGIONAL GRID →",
     linkHref: "https://maps.google.com/?q=RAK+Economical+Zone",
   },
@@ -260,31 +270,37 @@ const projectsGridData = {
       category: "Real Estate",
       title: "RAK Waterfront Series",
       image: "/projects/rak-waterfront.jpg",
+      imageAlt: PROJECT_GRID_IMAGE_ALTS["RAK Waterfront Series"],
     },
     {
       category: "Protocol",
       title: "Ledger Identity V.2",
       image: "/projects/ledger-identity.jpg",
+      imageAlt: PROJECT_GRID_IMAGE_ALTS["Ledger Identity V.2"],
     },
     {
       category: "Finance",
       title: "Sovereign Debt Tokens",
       image: "/projects/sovereign-debt.jpg",
+      imageAlt: PROJECT_GRID_IMAGE_ALTS["Sovereign Debt Tokens"],
     },
     {
       category: "Logistics",
       title: "Supply Chain Registry",
       image: "/projects/supply-chain.jpg",
+      imageAlt: PROJECT_GRID_IMAGE_ALTS["Supply Chain Registry"],
     },
     {
       category: "Governance",
       title: "Citizen DAO Protocol",
       image: "/projects/citizen-dao.jpg",
+      imageAlt: PROJECT_GRID_IMAGE_ALTS["Citizen DAO Protocol"],
     },
     {
       category: "Luxury",
       title: "Heritage Asset Vault",
       image: "/projects/heritage-vault.jpg",
+      imageAlt: PROJECT_GRID_IMAGE_ALTS["Heritage Asset Vault"],
     },
   ],
 };
@@ -295,25 +311,25 @@ const projectsIntegrityData = {
     "Cryptonexis operates at the intersection of regulatory compliance and technological frontier, ensuring each partnership is built on a foundation of absolute transparency.",
   items: [
     {
-      icon: "verified",
+      icon: "badgeCheck",
       title: "Licensed and compliant",
       description:
         "Operating under strict UAE regulatory frameworks and governance standards.",
     },
     {
-      icon: "location",
+      icon: "mapPin",
       title: "Strategic UAE location",
       description:
         "Headquartered in the RAK Economic Zone, a global hub for digital asset innovation.",
     },
     {
-      icon: "compass",
+      icon: "compassNav",
       title: "Focused expertise",
       description:
         "Deep specialization in NFT architecture and institutional blockchain deployments.",
     },
     {
-      icon: "eye",
+      icon: "eyeOpen",
       title: "Transparent operations",
       description:
         "Real-time reporting and absolute clarity in all asset management protocols.",
@@ -325,16 +341,17 @@ const projectsPartnersData = {
   formTitle: "Connect with our Partners",
   submitLabel: "SEND INQUIRY",
   mapImage: "/projects/rak-map.jpg",
+  mapImageAlt: RAK_MAP_IMAGE_ALT,
   hqLabel: "HQ LOCATION",
   hqTitle: "RAK Economic Zone",
   hqAddress: "Al Hamra Industrial Zone-FZ, Ras Al Khaimah, United Arab Emirates",
   contactLabel: "DIRECT CONTACT",
   contactEmail: "office@cryptonexis.com",
   placeholders: {
-    name: "Full Name",
-    email: "Institutional Email",
-    subject: "Subject of Inquiry",
-    message: "Brief Summary of Project/Inquiry",
+    name: "Johnathan Doe",
+    email: "j.doe@institution.com",
+    subject: "Inquiry: Asset Management Protocol",
+    message: "Briefly describe your institutional requirements...",
   },
 };
 
@@ -343,7 +360,7 @@ const FALLBACK_BY_SLUG: Record<string, PublicPageView> = {
     slug: "home",
     title: "Home",
     status: "published",
-    seoTitle: "Cryptonexis Limited",
+    seoTitle: "Licensed NFT Creator and Issuer",
     seoDescription:
       "Cryptonexis Limited is a RAK Economic Zone licensed NFT creator and issuer, providing institutional-grade issuance infrastructure and compliance-first advisory.",
     effectiveSections: sections("home", [
@@ -357,7 +374,7 @@ const FALLBACK_BY_SLUG: Record<string, PublicPageView> = {
     slug: "about",
     title: "About Us",
     status: "published",
-    seoTitle: "About Us | Cryptonexis Limited",
+    seoTitle: "About Us",
     seoDescription:
       "Learn about Cryptonexis Limited and our institutional approach to compliant digital asset creation and issuance in the UAE.",
     effectiveSections: sections("about", [
@@ -373,7 +390,7 @@ const FALLBACK_BY_SLUG: Record<string, PublicPageView> = {
     slug: "services",
     title: "Services",
     status: "published",
-    seoTitle: "Services | Cryptonexis Limited",
+    seoTitle: "Services",
     seoDescription:
       "Institutional NFT creation and issuance services, licensing authority, and regulated digital asset infrastructure from Cryptonexis Limited.",
     effectiveSections: sections("services", [
@@ -385,7 +402,7 @@ const FALLBACK_BY_SLUG: Record<string, PublicPageView> = {
     slug: "projects",
     title: "Projects",
     status: "published",
-    seoTitle: "Projects | Cryptonexis Limited",
+    seoTitle: "Projects",
     seoDescription:
       "Institutional digital asset and NFT infrastructure portfolio — tokenization and distributed ledger deployments across the MENA region.",
     effectiveSections: sections("projects", [
@@ -400,7 +417,7 @@ const FALLBACK_BY_SLUG: Record<string, PublicPageView> = {
     slug: "contact",
     title: "Contact Us",
     status: "published",
-    seoTitle: "Contact | Cryptonexis Limited",
+    seoTitle: "Contact",
     seoDescription:
       "Contact Cryptonexis Limited for institutional digital asset inquiries, RAK Economic Zone headquarters, and partnership channels.",
     effectiveSections: sections("contact", [

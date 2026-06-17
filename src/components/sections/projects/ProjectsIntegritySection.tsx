@@ -6,30 +6,34 @@ type ProjectsIntegrityContent = z.infer<typeof projectsIntegrityDataSchema>;
 
 const DEFAULT_HEADING = "Institutional Integrity by Design";
 
+function normalizeHeading(heading: string): string {
+  return heading.replace(/\s+/g, " ").trim();
+}
+
 const DEFAULT_DESCRIPTION =
   "Cryptonexis operates at the intersection of regulatory compliance and technological frontier, ensuring each partnership is built on a foundation of absolute transparency.";
 
 const DEFAULT_ITEMS = [
   {
-    icon: "verified",
+    icon: "badgeCheck",
     title: "Licensed and compliant",
     description:
       "Operating under strict UAE regulatory frameworks and governance standards.",
   },
   {
-    icon: "location",
+    icon: "mapPin",
     title: "Strategic UAE location",
     description:
       "Headquartered in the RAK Economic Zone, a global hub for digital asset innovation.",
   },
   {
-    icon: "compass",
+    icon: "compassNav",
     title: "Focused expertise",
     description:
       "Deep specialization in NFT architecture and institutional blockchain deployments.",
   },
   {
-    icon: "eye",
+    icon: "eyeOpen",
     title: "Transparent operations",
     description:
       "Real-time reporting and absolute clarity in all asset management protocols.",
@@ -41,7 +45,7 @@ export default function ProjectsIntegritySection({
 }: {
   content?: ProjectsIntegrityContent;
 }) {
-  const heading = content?.heading?.trim() || DEFAULT_HEADING;
+  const heading = normalizeHeading(content?.heading?.trim() || DEFAULT_HEADING);
   const description = content?.description?.trim() || DEFAULT_DESCRIPTION;
   const items =
     content?.items && content.items.length > 0 ? content.items : DEFAULT_ITEMS;
@@ -60,7 +64,10 @@ export default function ProjectsIntegritySection({
           {items.map((item) => (
             <li key={item.title} className="cx-projects-integrity__item">
               <span className="cx-projects-integrity__icon" aria-hidden="true">
-                <ProjectsIntegrityIcon name={item.icon || "verified"} />
+                <ProjectsIntegrityIcon
+                  name={item.icon || "badgeCheck"}
+                  className="cx-projects-integrity__icon-svg"
+                />
               </span>
               <div className="cx-projects-integrity__content">
                 <h3 className="cx-projects-integrity__item-title">{item.title}</h3>

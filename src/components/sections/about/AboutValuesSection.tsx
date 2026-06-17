@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type { aboutValuesDataSchema } from "@/schemas/sections";
 import * as Icons from "lucide-react";
 import React from "react";
+import { globalReachImageAlt } from "@/lib/image-alt";
 
 type AboutValuesContent = z.infer<typeof aboutValuesDataSchema>;
 
@@ -51,7 +52,7 @@ export default function AboutValuesSection({ content }: { content: AboutValuesCo
           <div className="about-values__reach-image-wrap">
             <img
               src={reach.image}
-              alt=""
+              alt={globalReachImageAlt({ title: reach.title })}
               width={420}
               height={320}
               className="about-values__reach-image"
