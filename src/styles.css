@@ -13601,6 +13601,16 @@ html:has(.cx-site) {
   outline-offset: var(--cx-focus-ring-offset);
 }
 
+/* Contact / projects lead forms — no input outline on click or keyboard focus */
+.owtc-app .cx-contact__input:focus,
+.owtc-app .cx-contact__input:focus-visible,
+.owtc-app .cx-projects-partners__input:focus,
+.owtc-app .cx-projects-partners__input:focus-visible {
+  outline: none;
+  outline-offset: 0;
+  box-shadow: none;
+}
+
 .cx-site .brand:focus-visible {
   outline: var(--cx-focus-ring-width) solid var(--cx-focus-ring-color);
   outline-offset: 4px;
