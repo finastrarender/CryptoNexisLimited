@@ -12691,14 +12691,9 @@ button {
   color: #b0b0b0;
 }
 
+.cx-projects-partners__input:focus,
 .cx-projects-partners__input:focus-visible {
-  outline: var(--cx-focus-ring-width) solid var(--cx-focus-ring-color);
-  outline-offset: 3px;
-}
-
-.cx-projects-partners__field:has(:focus-visible),
-.cx-projects-partners__field:focus-within {
-  border-bottom-color: var(--cx-focus-ring-color);
+  outline: none;
 }
 
 .cx-projects-partners__field--invalid {
@@ -12968,6 +12963,7 @@ button {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: clamp(20px, 3vw, 32px);
+  align-items: start;
 }
 
 .cx-contact__field {
@@ -12976,17 +12972,26 @@ button {
   border-bottom: 1px solid #e0e0e0;
 }
 
-.cx-contact__form > .cx-contact__form-row:first-child .cx-contact__field:first-child {
+.cx-contact__form-row .cx-contact__field {
   padding-top: 0;
 }
 
-.cx-contact__form-row + .cx-contact__field,
-.cx-contact__field + .cx-contact__field {
+.cx-contact__form > .cx-contact__form-row + .cx-contact__field,
+.cx-contact__form > .cx-contact__field + .cx-contact__field {
   padding-top: clamp(10px, 1.2vw, 14px);
 }
 
 .cx-contact__field--area {
   padding-bottom: clamp(8px, 1vw, 10px);
+}
+
+.cx-contact__field--invalid {
+  border-bottom-color: #b91c1c;
+  padding-bottom: 2px;
+}
+
+.cx-contact__form-row .cx-contact__field--invalid {
+  padding-bottom: 2px;
 }
 
 .cx-contact__label {
@@ -13020,19 +13025,9 @@ button {
   color: #b8b8b8;
 }
 
+.cx-contact__input:focus,
 .cx-contact__input:focus-visible {
-  outline: var(--cx-focus-ring-width) solid var(--cx-focus-ring-color);
-  outline-offset: 3px;
-}
-
-.cx-contact__field:has(:focus-visible),
-.cx-contact__field:focus-within {
-  border-bottom-color: var(--cx-focus-ring-color);
-}
-
-.cx-contact__field--invalid {
-  border-bottom-color: #b91c1c;
-  padding-bottom: 2px;
+  outline: none;
 }
 
 .cx-contact__field--invalid:focus-within {
@@ -13041,6 +13036,7 @@ button {
 
 .cx-contact__field-error {
   margin: 4px 0 0;
+  padding: 0;
   font-family: var(--font-sans);
   font-size: 12px;
   line-height: 1.35;
